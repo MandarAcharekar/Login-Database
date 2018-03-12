@@ -33,12 +33,29 @@ read -s pass
 
 hash_check=`echo $pass | sha256sum`
 
+:'
 mysql -u root -pmandar<<EOF
 use abcd;
 select * from Storage where password = "${hash_check}"
 AND username = "$user";
 
+select username from Storage where password = "${hash_check}"
+AND username = "$user";
+select password from Storage where password = "${hash_check}"
+AND username = "$user";
 EOF
+'
+
+echo -e "NOW BASH COMMANDS:\n"
+my_user=$(echo "select username from Storage where password =\"${hash_check}\" AND username = \"$user\" ;" | mysql abcd -u root -pmandar )
+my_pass=$(echo "select password from Storage where password=\"${hash_check}\" AND username=\"$user\";" | mysql abcd -u root -pmandar)
+
+echo -e "USERNAME: $my_user\n PASSWORD: $my_pass\n"
+
+
+
+
+
 
 ;;
 esac
