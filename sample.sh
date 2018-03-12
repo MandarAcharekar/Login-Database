@@ -13,13 +13,12 @@ read -s pass
 
 hash_pass=`echo $pass | sha256sum`
 
-echo -e "THE DATABASE:\n"
-
 mysql -u root -pmandar << EOF
 use abcd;
 insert into Storage (username,password) VALUES ("${user}","${hash_pass}");
-select * from Storage;
 EOF
+
+echo -e "\t$user ADDED INTO DATABASE!!\n"
 
 #echo -e "USERNAME : $user\nPASSWORD: $pass\nHASED PASWWORD IS: ${hash_pass}"
 ;;
@@ -48,12 +47,22 @@ user_pass=$(expr length "$my_pass") #bcoz password takes 9 char. and 1 new line 
 #echo "$user_pass"
 
 #user_actual=$(echo $str | cut -d' ' -f 2)
+
 if [ $user_len -gt 0 ]; then 
 	echo -e "\t\tWELCOME $my_user !\n\t\tLOGIN SUCCESFULL!\n"
 fi
 
 ;;
 esac
+
+echo -e "\t\tTHE DATABASE:\n"
+
+mysql -u root -pmandar << EOF
+use abcd;
+select * from Storage;
+EOF
+
+
 
 
 
