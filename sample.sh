@@ -11,21 +11,30 @@ read user
 echo "Enter password:"
 read -s pass
 
-hash_pass=`echo $pass | sha256sum`
+pass_len=$(expr length "$pass")
+echo "$pass_len"
 
-mysql -u root -pmandar << EOF
-use abcd;
-insert into Storage (username,password) VALUES ("${user}","${hash_pass}");
+if [ $pass_len -lt 8 ] ;
+then
+	echo -e "Password can't be less than 8 characters"
+else
+	hash_pass=`echo $pass | sha256sum`
+
+	mysql -u root -pmandar << EOF
+	use abcd;
+	insert into Storage (username,password) VALUES ("${user}","${hash_pass}");
 EOF
 
-echo -e "\t$user ADDED INTO DATABASE!!\n"
+	echo -e "\t$user ADDED INTO DATABASE!!\n"
+
+fi
 
 #echo -e "USERNAME : $user\nPASSWORD: $pass\nHASED PASWWORD IS: ${hash_pass}"
 ;;
 
 
 2)echo -e "\t\tLoging into Existinfg Account...."
-echo "Enter Username":
+echo "Enter Username:"
 read user
 echo "Enter Password:"
 read -s pass
@@ -61,8 +70,5 @@ mysql -u root -pmandar << EOF
 use abcd;
 select * from Storage;
 EOF
-
-
-
 
 
